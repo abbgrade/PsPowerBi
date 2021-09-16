@@ -1,6 +1,6 @@
 @{
     RootModule = 'PsPowerBi.dll'
-    ModuleVersion = '0.1'
+    ModuleVersion = '0.1.0'
     GUID = '638cdb08-f357-4d85-80fa-ff95ab6a1341'
     DefaultCommandPrefix = 'PowerBi'
     Author = 'Steffen Kampmann'
