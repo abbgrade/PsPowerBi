@@ -1,0 +1,60 @@
+﻿using Microsoft.PowerBI.Api;
+using Microsoft.PowerBI.Api.Models;
+using System.Collections.Generic;
+using System.Management.Automation;
+using System.Linq;
+
+namespace PsPowerBi
+{
+    [Cmdlet(VerbsCommon.Get, "Report")]
+    [OutputType(typeof(Report))]
+    public class GetReportCommand : PSCmdlet
+    {
+
+        [Parameter(
+            Mandatory = false,
+            ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty()]
+        public PowerBIClient Connection { get; set; }
+
+        [Parameter(
+            Mandatory = false,
+            ValueFromPipeline = true,
+            ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty()]
+        public Group Workspace { get; set; }
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+
+            if (Connection == null)
+                Connection = ConnectServiceCommand.SessionConnection;
+
+            if (Workspace == null)
+            {
+                WriteVerbose($"Request reports.");
+                var reports = Connection.Reports.GetReports().Value;
+                WriteVerbose($"{ reports.Count } reports received.");
+
+                foreach (var report in reports)
+                {
+                    WriteObject(report);
+                }
+            }
+            else
+            {
+                WriteVerbose($"Request reports with filter on workspace { Workspace.Id }.");
+                var reports = Connection.Reports.GetReportsInGroup(groupId: Workspace.Id).Value;
+                WriteVerbose($"{ reports.Count } reports received with filter on workspace { Workspace.Id }.");
+
+                foreach (var report in reports)
+                {
+                    var result = new PSObject(report);
+                    result.Properties.Add(new PSNoteProperty("WorkspaceId", Workspace.Id));
+                    WriteObject(result);
+                }
+            }
+        }
+    }
+}
