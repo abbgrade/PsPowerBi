@@ -13,19 +13,22 @@ namespace PsPowerBi
 
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
         public PowerBIClient Connection { get; set; }
 
         [Parameter(
             Mandatory = false,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
         public Group Workspace { get; set; }
 
         [Parameter(
-            Mandatory = false
+            Mandatory = false,
+            Position = 0
         )]
         [ValidateNotNullOrEmpty()]
         public string Name { get; set; }

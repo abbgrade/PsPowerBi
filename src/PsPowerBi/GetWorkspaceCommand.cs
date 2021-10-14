@@ -13,20 +13,24 @@ namespace PsPowerBi
 
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
         public PowerBIClient Connection { get;set; }
 
         [Parameter(
             Mandatory = false,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
         public Capacity Capacity { get; set; }
 
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true,
+            Position = 0
+        )]
         [ValidateNotNullOrEmpty()]
         public string Name { get; set; }
 
