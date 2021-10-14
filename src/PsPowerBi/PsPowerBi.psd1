@@ -18,11 +18,14 @@
         'Get-Report',
         'Get-Workspace',
         'Move-Workspace',
+        'New-Datasource',
         'Register-Dataset',
         'Remove-Dataset',
         'Remove-Datasource',
         'Remove-Report',
-        'Remove-Workspace'
+        'Remove-Workspace',
+        'Set-Dataset',
+        'Set-Datasource'
     )
 
     PrivateData = @{
