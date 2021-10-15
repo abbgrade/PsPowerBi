@@ -124,7 +124,8 @@ namespace PsPowerBi
                                     credentialsEncryptor: _credentialsEncryptor
                                 );
 
-                            Connection.Gateways.CreateDatasource(gatewayId: Gateway.Id, request);
+                            var datasource = Connection.Gateways.CreateDatasource(gatewayId: Gateway.Id, request);
+                            WriteObject(datasource);
                         }
                         else
                             new PSNotSupportedException("Datasource creation without gateway.");
