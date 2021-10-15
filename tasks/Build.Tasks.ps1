@@ -1,6 +1,6 @@
 requires Configuration
 
-[System.IO.FileInfo] $global:Manifest = "$PSScriptRoot/../src/PsPowerBi/bin/$Configuration/net5.0/publish/PsPowerBi.psd1"
+[System.IO.FileInfo] $global:Manifest = "$PSScriptRoot/../src/PsPowerBi/bin/$Configuration/netcoreapp3.1/publish/PsPowerBi.psd1"
 
 
 # Synopsis: Build project.
