@@ -5,6 +5,7 @@ using Microsoft.PowerBI.Api.Models.Credentials;
 using Microsoft.PowerBI.Api.Extensions;
 using System.Security;
 using Microsoft.PowerBI.Api.Extensions.Models.Credentials;
+using System;
 
 namespace PsPowerBi
 {
@@ -69,62 +70,69 @@ namespace PsPowerBi
         {
             base.ProcessRecord();
 
-            if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
-
-            SetCredentialByUsernamePassword();
-
-            switch (Type)
+            try
             {
-                case "Sql":
-                    {
-                        if (string.IsNullOrEmpty(SqlServerName))
-                            throw new PSInvalidOperationException($"Parameter {nameof(SqlServerName)} is required for SQL datasources.");
 
-                        if (string.IsNullOrEmpty(SqlDatabaseName))
-                            throw new PSInvalidOperationException($"Parameter {nameof(SqlDatabaseName)} is required for SQL datasources.");
-                    }
-                    break;
+                if (Connection == null)
+                    Connection = ConnectServiceCommand.SessionConnection;
 
-                default: throw new PSNotSupportedException($"DataSourceType {Type} is not supported.");
-            }
+                SetCredentialByUsernamePassword();
 
-            {
-                //WriteVerbose($"Set credential of datasource { datasourceId } on gateway { gatewayId }.");
-                if (WhatIf.ToBool() == false)
+                switch (Type)
                 {
-                    ICredentialsEncryptor _credentialsEncryptor = null;
-
-                    if (Gateway != null)
-                    {
-                        _credentialsEncryptor = new AsymmetricKeyEncryptor(Gateway.PublicKey);
-                    }
-
-                    if (Gateway != null)
-                    {
-                        var request = new Models.PublishDatasourceToGatewayRequest
+                    case "Sql":
                         {
-                            DataSourceType = Type,
-                            DataSourceName = Name,
-                            ConnectionDetails = $"{{ \"server\":\"{SqlServerName}\", \"database\":\"{SqlDatabaseName}\" }}"
-                        };
+                            if (string.IsNullOrEmpty(SqlServerName))
+                                throw new PSInvalidOperationException($"Parameter {nameof(SqlServerName)} is required for SQL datasources.");
 
-                        if (Credential != null)
-                            request.CredentialDetails = new Models.CredentialDetails(
-                                credentialsBase: new BasicCredentials(
-                                    username: Credential.UserName,
-                                    password: Credential.GetNetworkCredential().Password
-                                ),
-                                privacyLevel: PrivacyLevel,
-                                encryptedConnection: EncryptedConnection,
-                                credentialsEncryptor: _credentialsEncryptor
-                            );
+                            if (string.IsNullOrEmpty(SqlDatabaseName))
+                                throw new PSInvalidOperationException($"Parameter {nameof(SqlDatabaseName)} is required for SQL datasources.");
+                        }
+                        break;
 
-                        Connection.Gateways.CreateDatasource(gatewayId: Gateway.Id, request);
-                    }
-                    else
-                        throw new PSNotSupportedException("Datasource creation without gateway.");
+                    default: throw new PSNotSupportedException($"DataSourceType {Type} is not supported.");
                 }
+
+                {
+                    //WriteVerbose($"Set credential of datasource { datasourceId } on gateway { gatewayId }.");
+                    if (WhatIf.ToBool() == false)
+                    {
+                        ICredentialsEncryptor _credentialsEncryptor = null;
+
+                        if (Gateway != null)
+                        {
+                            _credentialsEncryptor = new AsymmetricKeyEncryptor(Gateway.PublicKey);
+                        }
+
+                        if (Gateway != null)
+                        {
+                            var request = new Models.PublishDatasourceToGatewayRequest
+                            {
+                                DataSourceType = Type,
+                                DataSourceName = Name,
+                                ConnectionDetails = $"{{ \"server\":\"{SqlServerName}\", \"database\":\"{SqlDatabaseName}\" }}"
+                            };
+
+                            if (Credential != null)
+                                request.CredentialDetails = new Models.CredentialDetails(
+                                    credentialsBase: new BasicCredentials(
+                                        username: Credential.UserName,
+                                        password: Credential.GetNetworkCredential().Password
+                                    ),
+                                    privacyLevel: PrivacyLevel,
+                                    encryptedConnection: EncryptedConnection,
+                                    credentialsEncryptor: _credentialsEncryptor
+                                );
+
+                            Connection.Gateways.CreateDatasource(gatewayId: Gateway.Id, request);
+                        }
+                        else
+                            new PSNotSupportedException("Datasource creation without gateway.");
+                    }
+                }
+            } catch (Exception ex)
+            {
+                WriteError(new ErrorRecord(exception: ex, errorId: null, errorCategory: ErrorCategory.NotSpecified, targetObject: null));
             }
         }
     }
