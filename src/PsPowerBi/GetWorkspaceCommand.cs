@@ -1,13 +1,12 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
-using System.Management.Automation;
 using System.Linq;
+using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Workspace")]
-    [OutputType(typeof(Group))]
+    [OutputType(typeof(Models.Group))]
     public class GetWorkspaceCommand : PSCmdlet
     {
 
@@ -24,7 +23,7 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true
         )]
         [ValidateNotNullOrEmpty()]
-        public Capacity Capacity { get; set; }
+        public Models.Capacity Capacity { get; set; }
 
         [Parameter(
             Mandatory = false,
@@ -47,12 +46,12 @@ namespace PsPowerBi
 
             if (Capacity != null) {
                 WriteVerbose($"Filter workspaces on capacity { Capacity.DisplayName }");
-                workspaces = workspaces.Where(w => w.CapacityId == Capacity.Id).ToList<Group>();
+                workspaces = workspaces.Where(w => w.CapacityId == Capacity.Id).ToList();
             }
 
             if (Name != null) {
                 WriteVerbose($"Filter workspaces on name { Name }");
-                workspaces = workspaces.Where(w => w.Name == Name).ToList<Group>();
+                workspaces = workspaces.Where(w => w.Name == Name).ToList();
             }
 
             foreach (var workspace in workspaces)

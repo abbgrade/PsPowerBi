@@ -1,11 +1,11 @@
 ﻿using Microsoft.PowerBI.Api;
-using Models = Microsoft.PowerBI.Api.Models;
-using System.Management.Automation;
-using Microsoft.PowerBI.Api.Models.Credentials;
 using Microsoft.PowerBI.Api.Extensions;
-using System.Security;
 using Microsoft.PowerBI.Api.Extensions.Models.Credentials;
+using Microsoft.PowerBI.Api.Models.Credentials;
 using System;
+using System.Management.Automation;
+using System.Security;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {

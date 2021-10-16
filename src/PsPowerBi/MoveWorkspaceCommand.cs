@@ -1,9 +1,6 @@
 ﻿using Microsoft.PowerBI.Api;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using Microsoft.PowerBI.Api.Models;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
@@ -30,7 +27,7 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true
         )]
         [ValidateNotNullOrEmpty()]
-        public Capacity Capacity { get; private set; }
+        public Models.Capacity Capacity { get; private set; }
 
         [Parameter()]
         public SwitchParameter WhatIf { get; set; }
@@ -47,12 +44,12 @@ namespace PsPowerBi
         {
             base.ProcessRecord();
 
-            Group _workspace = (Group) Workspace.BaseObject;
+            Models.Group _workspace = (Models.Group) Workspace.BaseObject;
 
             WriteVerbose($"Move workspace '{ _workspace.Name }' ({ _workspace.Id }) to capacity '{ Capacity.DisplayName }' ({ Capacity.Id })");
 
             if (WhatIf.ToBool() == false)
-                Connection.Groups.AssignToCapacity(groupId: _workspace.Id, requestParameters: new AssignToCapacityRequest(capacityId: Capacity.Id));
+                Connection.Groups.AssignToCapacity(groupId: _workspace.Id, requestParameters: new Models.AssignToCapacityRequest(capacityId: Capacity.Id));
 
         }
     }

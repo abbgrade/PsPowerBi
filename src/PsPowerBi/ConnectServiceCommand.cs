@@ -2,10 +2,8 @@
 using Microsoft.PowerBI.Api;
 using Microsoft.Rest;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Management.Automation;
 using System.Security;
-using System.Threading.Tasks;
 
 namespace PsPowerBi
 {

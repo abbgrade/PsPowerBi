@@ -1,13 +1,11 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Linq;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Dataset")]
-    [OutputType(typeof(Dataset))]
+    [OutputType(typeof(Models.Dataset))]
     public class GetDatasetCommand : PSCmdlet
     {
 
@@ -24,7 +22,7 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true
         )]
         [ValidateNotNullOrEmpty()]
-        public Group Workspace { get; set; }
+        public Models.Group Workspace { get; set; }
 
         [Parameter(
             Mandatory = false,

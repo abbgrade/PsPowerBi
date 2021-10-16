@@ -1,15 +1,14 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
-using System.Management.Automation;
-using System.Linq;
-using System.IO;
 using System;
+using System.IO;
+using System.Linq;
+using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.New, "Report")]
-    [OutputType(typeof(Report))]
+    [OutputType(typeof(Models.Report))]
     public class NewReportCommand : PSCmdlet
     {
 
@@ -26,10 +25,10 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true
         )]
         [ValidateNotNullOrEmpty()]
-        public Group Workspace { get; set; }
+        public Models.Group Workspace { get; set; }
 
         [Parameter()]
-        public Dataset Dataset { get; set; }
+        public Models.Dataset Dataset { get; set; }
 
         [Parameter(
             Mandatory = true
@@ -40,7 +39,7 @@ namespace PsPowerBi
         public string Name { get; set; }
 
         [Parameter()]
-        public ImportConflictHandlerMode? ImportConflictHandlerMode { get; set; }
+        public Models.ImportConflictHandlerMode? ImportConflictHandlerMode { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -55,7 +54,7 @@ namespace PsPowerBi
             if (string.IsNullOrEmpty(Name))
                 Name = PbixFile.Name;
 
-            Report report;
+            Models.Report report;
             if (Workspace == null)
             {
                 WriteVerbose("$Add report {Name} to personal workspace.");
@@ -117,9 +116,9 @@ namespace PsPowerBi
                 WriteVerbose($"Assign report to dataset {Dataset.Name}");
 
                 if (Workspace == null)
-                    Connection.Reports.RebindReport(reportId: report.Id, requestParameters: new RebindReportRequest(Dataset.Id));
+                    Connection.Reports.RebindReport(reportId: report.Id, requestParameters: new Models.RebindReportRequest(Dataset.Id));
                 else
-                    Connection.Reports.RebindReportInGroup(groupId: Workspace.Id, reportId: report.Id, requestParameters: new RebindReportRequest(Dataset.Id));
+                    Connection.Reports.RebindReportInGroup(groupId: Workspace.Id, reportId: report.Id, requestParameters: new Models.RebindReportRequest(Dataset.Id));
             }
         }
     }

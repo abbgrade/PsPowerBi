@@ -1,13 +1,13 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Gateway")]
-    [OutputType(typeof(Gateway))]
+    [OutputType(typeof(Models.Gateway))]
     public class GetGatewayCommand : PSCmdlet
     {
 
@@ -33,15 +33,15 @@ namespace PsPowerBi
                 throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             WriteVerbose($"Request capacities.");
-            IList<Gateway> capacities = Connection.Gateways.GetGateways().Value;
+            IList<Models.Gateway> capacities = Connection.Gateways.GetGateways().Value;
             WriteVerbose($"{ capacities.Count } capacities received.");
 
             if (Name != null) {
                 WriteVerbose($"Filter capacities by name { Name }.");
-                Gateway gateway = capacities.Where(c => c.Name == Name).Single();
+                Models.Gateway gateway = capacities.Where(c => c.Name == Name).Single();
                 WriteObject(gateway);
             } else {
-                foreach (Gateway gateway in capacities)
+                foreach (Models.Gateway gateway in capacities)
                 {
                     WriteObject(gateway);
                 }

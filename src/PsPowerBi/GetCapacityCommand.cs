@@ -1,13 +1,13 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Capacity")]
-    [OutputType(typeof(Capacity))]
+    [OutputType(typeof(Models.Capacity))]
     public class GetCapacityCommand : PSCmdlet
     {
 
@@ -33,15 +33,15 @@ namespace PsPowerBi
                 throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             WriteVerbose($"Request capacities.");
-            IList<Capacity> capacities = Connection.Capacities.GetCapacities().Value;
+            IList<Models.Capacity> capacities = Connection.Capacities.GetCapacities().Value;
             WriteVerbose($"{ capacities.Count } capacities received.");
 
             if (Name != null) {
                 WriteVerbose($"Filter capacities by name { Name }.");
-                Capacity capacity = capacities.Where(c => c.DisplayName == Name).Single();
+                Models.Capacity capacity = capacities.Where(c => c.DisplayName == Name).Single();
                 WriteObject(capacity);
             } else {
-                foreach (Capacity capacity in capacities)
+                foreach (Models.Capacity capacity in capacities)
                 {
                     WriteObject(capacity);
                 }

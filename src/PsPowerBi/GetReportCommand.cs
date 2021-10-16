@@ -1,13 +1,11 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Linq;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Report")]
-    [OutputType(typeof(Report))]
+    [OutputType(typeof(Models.Report))]
     public class GetReportCommand : PSCmdlet
     {
 
@@ -22,7 +20,7 @@ namespace PsPowerBi
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public Group Workspace { get; set; }
+        public Models.Group Workspace { get; set; }
 
         protected override void ProcessRecord()
         {
