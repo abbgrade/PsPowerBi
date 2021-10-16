@@ -16,7 +16,7 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true
         )]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get;set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = false,
@@ -39,7 +39,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             WriteVerbose($"Request workspaces.");
             var workspaces = Connection.Groups.GetGroups().Value;

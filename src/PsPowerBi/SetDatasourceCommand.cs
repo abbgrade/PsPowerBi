@@ -19,7 +19,7 @@ namespace PsPowerBi
             Mandatory = false,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = true,
@@ -59,7 +59,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             SetCredentialByUsernamePassword();
 

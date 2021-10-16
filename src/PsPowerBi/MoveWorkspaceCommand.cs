@@ -15,7 +15,7 @@ namespace PsPowerBi
             Mandatory = false
         )]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = true,
@@ -40,10 +40,7 @@ namespace PsPowerBi
             base.BeginProcessing();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
-
-            if (Connection == null)
-                throw new ArgumentNullException(nameof(Connection), "Please run Connect-Service");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
         }
 
         protected override void ProcessRecord()

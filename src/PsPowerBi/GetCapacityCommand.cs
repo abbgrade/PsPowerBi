@@ -23,14 +23,14 @@ namespace PsPowerBi
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             WriteVerbose($"Request capacities.");
             IList<Capacity> capacities = Connection.Capacities.GetCapacities().Value;

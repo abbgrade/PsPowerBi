@@ -18,14 +18,14 @@ namespace PsPowerBi
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get;set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             Connection.Dispose();
             WriteVerbose("Disconnected from Power BI");
