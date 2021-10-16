@@ -1,11 +1,5 @@
-﻿using Microsoft.Identity.Client;
-using Microsoft.PowerBI.Api;
-using Microsoft.Rest;
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.PowerBI.Api;
 using System.Management.Automation;
-using System.Security;
-using System.Threading.Tasks;
 
 namespace PsPowerBi
 {
@@ -18,14 +12,14 @@ namespace PsPowerBi
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get;set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             Connection.Dispose();
             WriteVerbose("Disconnected from Power BI");

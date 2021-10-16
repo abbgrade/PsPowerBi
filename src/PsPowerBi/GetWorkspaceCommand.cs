@@ -1,32 +1,35 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
-using System.Management.Automation;
 using System.Linq;
+using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Workspace")]
-    [OutputType(typeof(Group))]
+    [OutputType(typeof(Models.Group))]
     public class GetWorkspaceCommand : PSCmdlet
     {
 
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get;set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = false,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
-        public Capacity Capacity { get; set; }
+        public Models.Capacity Capacity { get; set; }
 
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true,
+            Position = 0
+        )]
         [ValidateNotNullOrEmpty()]
         public string Name { get; set; }
 
@@ -35,7 +38,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             WriteVerbose($"Request workspaces.");
             var workspaces = Connection.Groups.GetGroups().Value;
@@ -43,12 +46,12 @@ namespace PsPowerBi
 
             if (Capacity != null) {
                 WriteVerbose($"Filter workspaces on capacity { Capacity.DisplayName }");
-                workspaces = workspaces.Where(w => w.CapacityId == Capacity.Id).ToList<Group>();
+                workspaces = workspaces.Where(w => w.CapacityId == Capacity.Id).ToList();
             }
 
             if (Name != null) {
                 WriteVerbose($"Filter workspaces on name { Name }");
-                workspaces = workspaces.Where(w => w.Name == Name).ToList<Group>();
+                workspaces = workspaces.Where(w => w.Name == Name).ToList();
             }
 
             foreach (var workspace in workspaces)

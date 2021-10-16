@@ -1,14 +1,12 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
-using System.Management.Automation;
-using System.Linq;
 using Newtonsoft.Json;
+using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Datasource")]
-    [OutputType(typeof(Datasource))]
+    [OutputType(typeof(Models.Datasource))]
     public class GetDatasourceCommand : PSCmdlet
     {
 
@@ -16,7 +14,7 @@ namespace PsPowerBi
             Mandatory = false,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = true,
@@ -24,7 +22,7 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "ByDataset")]
         [ValidateNotNullOrEmpty()]
-        public Dataset Dataset { get; set; }
+        public Models.Dataset Dataset { get; set; }
 
         [Parameter(
             Mandatory = true,
@@ -32,14 +30,14 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true,
             ParameterSetName = "ByGateway")]
         [ValidateNotNullOrEmpty()]
-        public Gateway Gateway { get; set; }
+        public Models.Gateway Gateway { get; set; }
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
 
             switch (this.ParameterSetName)
             {
