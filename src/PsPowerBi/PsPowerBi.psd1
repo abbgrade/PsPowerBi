@@ -19,6 +19,7 @@
         'Get-Workspace',
         'Move-Workspace',
         'New-Datasource',
+        'New-Report',
         'Register-Dataset',
         'Remove-Dataset',
         'Remove-Datasource',
