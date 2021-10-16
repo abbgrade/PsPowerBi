@@ -30,6 +30,12 @@ namespace PsPowerBi
         [Parameter()]
         public string ConnectionString { get; set; }
 
+        [Parameter()]
+        public Models.Datasource Datasource { get; set; }
+
+        [Parameter()]
+        public Models.Gateway Gateway { get; set; }
+
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
@@ -39,13 +45,26 @@ namespace PsPowerBi
 
             Guid workspaceId = (Guid) Dataset.Properties["WorkspaceId"].Value;
             Models.Dataset _dataset = (Models.Dataset) Dataset.BaseObject;
-            string datasetId = _dataset.Id;
+
+            if (Gateway != null)
+            {
+                Connection.Datasets.BindToGateway(
+                    groupId: workspaceId,
+                    datasetId: _dataset.Id,
+                    bindToGatewayRequest: new Models.BindToGatewayRequest(gatewayObjectId: Gateway.Id)
+                );
+            }
+
+            if (Datasource != null)
+            {
+                throw new PSNotSupportedException(nameof(Datasource));
+            }
 
             if (!string.IsNullOrEmpty(ConnectionString))
             {
-                WriteVerbose($"set connection string of dataset { datasetId } ({ _dataset.Name }) in workspace { workspaceId }.");
+                WriteVerbose($"set connection string of dataset { _dataset.Id } ({ _dataset.Name }) in workspace { workspaceId }.");
                 if (WhatIf.ToBool() == false)
-                    Connection.Datasets.SetAllDatasetConnections(workspaceId, datasetId, new Models.ConnectionDetails(ConnectionString));
+                    Connection.Datasets.SetAllDatasetConnections(workspaceId, _dataset.Id, new Models.ConnectionDetails(ConnectionString));
             }
         }
     }
