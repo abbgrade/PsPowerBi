@@ -39,7 +39,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             Guid workspaceId = (Guid) Dataset.Properties["WorkspaceId"].Value;
             Models.Dataset _dataset = (Models.Dataset) Dataset.BaseObject;

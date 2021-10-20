@@ -46,7 +46,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             if (!PbixFile.Exists)
                 throw new PSInvalidOperationException($"{nameof(PbixFile)} does not exist.");

@@ -26,7 +26,8 @@
         'Remove-Report',
         'Remove-Workspace',
         'Set-Dataset',
-        'Set-Datasource'
+        'Set-Datasource',
+        'Sync-Dataset'
     )
 
     PrivateData = @{

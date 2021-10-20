@@ -38,7 +38,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             WriteVerbose($"Request workspaces.");
             var workspaces = Connection.Groups.GetGroups().Value;
