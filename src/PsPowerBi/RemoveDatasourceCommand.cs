@@ -30,7 +30,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             Guid datasourceId = Guid.Empty;
             Guid gatewayId = Guid.Empty;

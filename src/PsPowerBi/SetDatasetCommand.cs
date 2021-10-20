@@ -29,9 +29,6 @@ namespace PsPowerBi
         public string ConnectionString { get; set; }
 
         [Parameter()]
-        public Models.Datasource Datasource { get; set; }
-
-        [Parameter()]
         public Models.Gateway Gateway { get; set; }
 
         protected override void ProcessRecord()
@@ -39,30 +36,33 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             Guid workspaceId = (Guid) Dataset.Properties["WorkspaceId"].Value;
             Models.Dataset _dataset = (Models.Dataset) Dataset.BaseObject;
 
             if (Gateway != null)
             {
+                WriteVerbose($"Bind dataset {_dataset.Name} to gateway {Gateway.Name}");
                 Connection.Datasets.BindToGateway(
                     groupId: workspaceId,
                     datasetId: _dataset.Id,
                     bindToGatewayRequest: new Models.BindToGatewayRequest(gatewayObjectId: Gateway.Id)
                 );
             }
-
-            if (Datasource != null)
-            {
-                throw new PSNotSupportedException(nameof(Datasource));
+            else {
+                WriteVerbose($"Do not bin dataset {_dataset.Name} to gateway");
             }
 
             if (!string.IsNullOrEmpty(ConnectionString))
             {
-                WriteVerbose($"set connection string of dataset { _dataset.Id } ({ _dataset.Name }) in workspace { workspaceId }.");
+                WriteVerbose($"set connection string of dataset { _dataset.Name } in workspace { workspaceId }.");
                 if (WhatIf.ToBool() == false)
                     Connection.Datasets.SetAllDatasetConnections(workspaceId, _dataset.Id, new Models.ConnectionDetails(ConnectionString));
+            }
+            else
+            {
+                WriteVerbose($"Do not set connection string of dataset {_dataset.Name}");
             }
         }
     }

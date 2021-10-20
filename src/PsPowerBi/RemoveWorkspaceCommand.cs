@@ -30,7 +30,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiConnection");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             Models.Group _workspace = (Models.Group) Workspace.BaseObject;
             Guid workspaceId = _workspace.Id;
