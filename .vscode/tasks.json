@@ -44,7 +44,10 @@
             "group": "build",
             "type": "shell",
             "command": "Invoke-Build",
-            "args": ["build"],
+            "args": [
+                "Build",
+                "-Force"
+            ],
             "problemMatcher": "$msCompile",
             "presentation": {
                 "echo": false,
