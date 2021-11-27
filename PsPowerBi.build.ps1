@@ -7,10 +7,16 @@ param(
 	[ValidateSet('Debug', 'Release')]
 	[string] $Configuration = 'Debug',
 
+	[switch] $Force,
+
 	[string] $NuGetApiKey = $env:nuget_apikey
 )
 
 . $PSScriptRoot\tasks\Build.Tasks.ps1
 
-# Synopsis: Default task.
-task . Build
+task Build -Jobs PsPowerBi.Build
+task Clean -Jobs PsPowerBi.Clean
+task Doc -Jobs PsPowerBi.Doc
+task Install -Jobs PsPowerBi.Install
+task Publish -Jobs PsPowerBi.Publish
+task Uninstall -Jobs PsPowerBi.Uninstall
