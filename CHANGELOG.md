@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- InteractiveAuthentication switch parameter to Connect-PowerBiService.
+
 ### Changed
 
 - Downgrade of Microsoft.Identity.Client from 4.36.2 to 4.22.0.
