@@ -14,17 +14,18 @@ schema: 2.0.0
 
 ### Properties_IntegratedSecurity (Default)
 ```
-Connect-PowerBiService [<CommonParameters>]
+Connect-PowerBiService -ClientID <String> -TenantId <String> [<CommonParameters>]
 ```
 
 ### Properties_Credential
 ```
-Connect-PowerBiService -Username <String> -Password <SecureString> [<CommonParameters>]
+Connect-PowerBiService -ClientID <String> -TenantId <String> -Username <String> -Password <SecureString>
+ [<CommonParameters>]
 ```
 
 ### Properties_InteractiveAuthentication
 ```
-Connect-PowerBiService [-InteractiveAuthentication] [<CommonParameters>]
+Connect-PowerBiService -ClientID <String> -TenantId <String> [-InteractiveAuthentication] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -77,6 +78,36 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Properties_InteractiveAuthentication
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ClientID
+{{ Fill ClientID Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TenantId
+{{ Fill TenantId Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True

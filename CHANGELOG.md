@@ -15,5 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Downgrade of Microsoft.Identity.Client from 4.36.2 to 4.22.0.
 - Upgrade of PowerShellStandard.Library to System.Management.Automation.
+- App and Tenant changed to parameter.
 
 <!-- markdownlint-configure-file {"MD024": { "siblings_only": true } } -->
