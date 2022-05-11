@@ -12,8 +12,19 @@ schema: 2.0.0
 
 ## SYNTAX
 
+### Properties_IntegratedSecurity (Default)
 ```
-Connect-PowerBiService [-Username <String>] [-Password <SecureString>] [<CommonParameters>]
+Connect-PowerBiService [<CommonParameters>]
+```
+
+### Properties_Credential
+```
+Connect-PowerBiService -Username <String> -Password <SecureString> [<CommonParameters>]
+```
+
+### Properties_InteractiveAuthentication
+```
+Connect-PowerBiService [-InteractiveAuthentication] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -35,10 +46,10 @@ PS C:\> {{ Add example code here }}
 
 ```yaml
 Type: SecureString
-Parameter Sets: (All)
+Parameter Sets: Properties_Credential
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -50,13 +61,28 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Properties_Credential
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -InteractiveAuthentication
+{{ Fill InteractiveAuthentication Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Properties_InteractiveAuthentication
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
