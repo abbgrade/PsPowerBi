@@ -21,11 +21,11 @@ namespace PsPowerBi
 
         [Parameter(Mandatory = true)]
         [ValidateNotNullOrEmpty()]
-        public string ClientID { get; set; };
+        public Guid ClientId { get; set; }
 
         [Parameter(Mandatory = true)]
         [ValidateNotNullOrEmpty()]
-        public string TenantId { get; set; };
+        public Guid TenantId { get; set; }
 
         [Parameter(
             ParameterSetName = PARAMETERSET_PROPERTIES_CREDENTIAL,
@@ -54,32 +54,36 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             var publicClientApp = PublicClientApplicationBuilder
-                .Create(ClientID)
+                .Create(ClientId.ToString())
                 .WithAuthority(AzureCloudInstance.AzurePublic, TenantId)
                 .WithDefaultRedirectUri()
                 .Build();
 
             AuthenticationResult authenticationResult = null;
+            var scopes = new[] { "https://analysis.windows.net/powerbi/api/.default" };
 
             switch(ParameterSetName)
             {
                 case PARAMETERSET_PROPERTIES_CREDENTIAL:
-                    authenticationResult = publicClientApp.AcquireTokenByUsernamePassword(
-                        scopes: new[] { "https://analysis.windows.net/powerbi/api/.default" },
+                    authenticationResult = publicClientApp
+                    .AcquireTokenByUsernamePassword(
+                        scopes: scopes,
                         username: Username,
                         password: Password
                     ).ExecuteAsync().Result;
                     break;
 
                 case PARAMETERSET_PROPERTIES_INTEGRATED:
-                    authenticationResult = publicClientApp.AcquireTokenByIntegratedWindowsAuth(
-                        scopes: new[] { "https://analysis.windows.net/powerbi/api/.default" }
+                    authenticationResult = publicClientApp
+                    .AcquireTokenByIntegratedWindowsAuth(
+                        scopes: scopes
                     ).ExecuteAsync().Result;
                     break;
 
                 case PARAMETERSET_PROPERTIES_INTERACTIVE:
-                    authenticationResult = publicClientApp.AcquireTokenInteractive(
-                        scopes: new[] { "https://analysis.windows.net/powerbi/api/.default" }
+                    authenticationResult = publicClientApp
+                    .AcquireTokenInteractive(
+                        scopes: scopes
                     ).ExecuteAsync().Result;
                     break;
 

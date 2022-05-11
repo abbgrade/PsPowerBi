@@ -14,18 +14,18 @@ schema: 2.0.0
 
 ### Properties_IntegratedSecurity (Default)
 ```
-Connect-PowerBiService -ClientID <String> -TenantId <String> [<CommonParameters>]
+Connect-PowerBiService -ClientId <Guid> -TenantId <Guid> [<CommonParameters>]
 ```
 
 ### Properties_Credential
 ```
-Connect-PowerBiService -ClientID <String> -TenantId <String> -Username <String> -Password <SecureString>
+Connect-PowerBiService -ClientId <Guid> -TenantId <Guid> -Username <String> -Password <SecureString>
  [<CommonParameters>]
 ```
 
 ### Properties_InteractiveAuthentication
 ```
-Connect-PowerBiService -ClientID <String> -TenantId <String> [-InteractiveAuthentication] [<CommonParameters>]
+Connect-PowerBiService -ClientId <Guid> -TenantId <Guid> [-InteractiveAuthentication] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,6 +42,21 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -InteractiveAuthentication
+{{ Fill InteractiveAuthentication Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Properties_InteractiveAuthentication
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Password
 {{ Fill Password Description }}
 
@@ -54,6 +69,21 @@ Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -TenantId
+{{ Fill TenantId Description }}
+
+```yaml
+Type: Guid
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -72,41 +102,11 @@ Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -InteractiveAuthentication
-{{ Fill InteractiveAuthentication Description }}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: Properties_InteractiveAuthentication
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ClientID
+### -ClientId
 {{ Fill ClientID Description }}
 
 ```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TenantId
-{{ Fill TenantId Description }}
-
-```yaml
-Type: String
+Type: Guid
 Parameter Sets: (All)
 Aliases:
 
