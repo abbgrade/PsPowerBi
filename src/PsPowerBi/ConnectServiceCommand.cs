@@ -19,10 +19,13 @@ namespace PsPowerBi
 
         internal static PowerBIClient SessionConnection { get; set; }
 
-        //The client id that Azure AD created when you registered your client app.
-        private const string clientID = "37f3b47a-a274-4c6b-b84f-69498c78c96e";
+        [Parameter(Mandatory = true)]
+        [ValidateNotNullOrEmpty()]
+        public string ClientID { get; set; };
 
-        private const string tenantId = "582259a1-dcaa-4cca-b1cf-e60d3f045ecd";
+        [Parameter(Mandatory = true)]
+        [ValidateNotNullOrEmpty()]
+        public string TenantId { get; set; };
 
         [Parameter(
             ParameterSetName = PARAMETERSET_PROPERTIES_CREDENTIAL,
@@ -51,8 +54,8 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             var publicClientApp = PublicClientApplicationBuilder
-                .Create(clientID)
-                .WithAuthority(AzureCloudInstance.AzurePublic, tenantId)
+                .Create(ClientID)
+                .WithAuthority(AzureCloudInstance.AzurePublic, TenantId)
                 .WithDefaultRedirectUri()
                 .Build();
 
