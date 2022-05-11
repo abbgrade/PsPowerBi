@@ -1,31 +1,32 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Linq;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Dataset")]
-    [OutputType(typeof(Dataset))]
+    [OutputType(typeof(Models.Dataset))]
     public class GetDatasetCommand : PSCmdlet
     {
 
         [Parameter(
             Mandatory = false,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = false,
             ValueFromPipeline = true,
-            ValueFromPipelineByPropertyName = true)]
+            ValueFromPipelineByPropertyName = true
+        )]
         [ValidateNotNullOrEmpty()]
-        public Group Workspace { get; set; }
+        public Models.Group Workspace { get; set; }
 
         [Parameter(
-            Mandatory = false
+            Mandatory = false,
+            Position = 0
         )]
         [ValidateNotNullOrEmpty()]
         public string Name { get; set; }
@@ -35,7 +36,7 @@ namespace PsPowerBi
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             if (Workspace == null)
             {

@@ -1,9 +1,6 @@
 ﻿using Microsoft.PowerBI.Api;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using Microsoft.PowerBI.Api.Models;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
@@ -15,7 +12,7 @@ namespace PsPowerBi
             Mandatory = false
         )]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = true,
@@ -30,7 +27,7 @@ namespace PsPowerBi
             ValueFromPipelineByPropertyName = true
         )]
         [ValidateNotNullOrEmpty()]
-        public Capacity Capacity { get; private set; }
+        public Models.Capacity Capacity { get; private set; }
 
         [Parameter()]
         public SwitchParameter WhatIf { get; set; }
@@ -40,22 +37,19 @@ namespace PsPowerBi
             base.BeginProcessing();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
-
-            if (Connection == null)
-                throw new ArgumentNullException(nameof(Connection), "Please run Connect-Service");
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
         }
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
-            Group _workspace = (Group) Workspace.BaseObject;
+            Models.Group _workspace = (Models.Group) Workspace.BaseObject;
 
             WriteVerbose($"Move workspace '{ _workspace.Name }' ({ _workspace.Id }) to capacity '{ Capacity.DisplayName }' ({ Capacity.Id })");
 
             if (WhatIf.ToBool() == false)
-                Connection.Groups.AssignToCapacity(groupId: _workspace.Id, requestParameters: new AssignToCapacityRequest(capacityId: Capacity.Id));
+                Connection.Groups.AssignToCapacity(groupId: _workspace.Id, requestParameters: new Models.AssignToCapacityRequest(capacityId: Capacity.Id));
 
         }
     }

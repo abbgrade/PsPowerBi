@@ -1,13 +1,13 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Capacity")]
-    [OutputType(typeof(Capacity))]
+    [OutputType(typeof(Models.Capacity))]
     public class GetCapacityCommand : PSCmdlet
     {
 
@@ -23,25 +23,25 @@ namespace PsPowerBi
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             WriteVerbose($"Request capacities.");
-            IList<Capacity> capacities = Connection.Capacities.GetCapacities().Value;
+            IList<Models.Capacity> capacities = Connection.Capacities.GetCapacities().Value;
             WriteVerbose($"{ capacities.Count } capacities received.");
 
             if (Name != null) {
                 WriteVerbose($"Filter capacities by name { Name }.");
-                Capacity capacity = capacities.Where(c => c.DisplayName == Name).Single();
+                Models.Capacity capacity = capacities.Where(c => c.DisplayName == Name).Single();
                 WriteObject(capacity);
             } else {
-                foreach (Capacity capacity in capacities)
+                foreach (Models.Capacity capacity in capacities)
                 {
                     WriteObject(capacity);
                 }

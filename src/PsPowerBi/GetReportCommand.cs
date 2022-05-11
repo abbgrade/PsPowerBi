@@ -1,13 +1,11 @@
 ﻿using Microsoft.PowerBI.Api;
-using Microsoft.PowerBI.Api.Models;
-using System.Collections.Generic;
 using System.Management.Automation;
-using System.Linq;
+using Models = Microsoft.PowerBI.Api.Models;
 
 namespace PsPowerBi
 {
     [Cmdlet(VerbsCommon.Get, "Report")]
-    [OutputType(typeof(Report))]
+    [OutputType(typeof(Models.Report))]
     public class GetReportCommand : PSCmdlet
     {
 
@@ -15,21 +13,21 @@ namespace PsPowerBi
             Mandatory = false,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public PowerBIClient Connection { get; set; }
+        public PowerBIClient Connection { get; set; } = ConnectServiceCommand.SessionConnection;
 
         [Parameter(
             Mandatory = false,
             ValueFromPipeline = true,
             ValueFromPipelineByPropertyName = true)]
         [ValidateNotNullOrEmpty()]
-        public Group Workspace { get; set; }
+        public Models.Group Workspace { get; set; }
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
 
             if (Connection == null)
-                Connection = ConnectServiceCommand.SessionConnection;
+                throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
             if (Workspace == null)
             {
