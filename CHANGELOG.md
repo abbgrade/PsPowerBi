@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Wrong verbose messages in Get-PowerBiGateways.
+
 ## [1.0.0] - 2022-05-11
 
 ### Added
