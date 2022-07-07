@@ -32,16 +32,16 @@ namespace PsPowerBi
             if (Connection == null)
                 throw new PSArgumentNullException(nameof(Connection), $"run Connect-PowerBiService");
 
-            WriteVerbose($"Request capacities.");
-            IList<Models.Gateway> capacities = Connection.Gateways.GetGateways().Value;
-            WriteVerbose($"{ capacities.Count } capacities received.");
+            WriteVerbose($"Request gateways.");
+            IList<Models.Gateway> gateways = Connection.Gateways.GetGateways().Value;
+            WriteVerbose($"{ gateways.Count } gateways received.");
 
             if (Name != null) {
-                WriteVerbose($"Filter capacities by name { Name }.");
-                Models.Gateway gateway = capacities.Where(c => c.Name == Name).Single();
+                WriteVerbose($"Filter gateways by name { Name }.");
+                Models.Gateway gateway = gateways.Where(c => c.Name == Name).Single();
                 WriteObject(gateway);
             } else {
-                foreach (Models.Gateway gateway in capacities)
+                foreach (Models.Gateway gateway in gateways)
                 {
                     WriteObject(gateway);
                 }

@@ -42,6 +42,21 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -ClientId
+{{ Fill ClientID Description }}
+
+```yaml
+Type: Guid
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -InteractiveAuthentication
 {{ Fill InteractiveAuthentication Description }}
 
@@ -99,21 +114,6 @@ Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -ClientId
-{{ Fill ClientID Description }}
-
-```yaml
-Type: Guid
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
