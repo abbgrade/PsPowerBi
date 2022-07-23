@@ -12,8 +12,20 @@ schema: 2.0.0
 
 ## SYNTAX
 
+### Properties_IntegratedSecurity (Default)
 ```
-Connect-PowerBiService [-Username <String>] [-Password <SecureString>] [<CommonParameters>]
+Connect-PowerBiService -ClientId <Guid> -TenantId <Guid> [<CommonParameters>]
+```
+
+### Properties_Credential
+```
+Connect-PowerBiService -ClientId <Guid> -TenantId <Guid> -Username <String> -Password <SecureString>
+ [<CommonParameters>]
+```
+
+### Properties_InteractiveAuthentication
+```
+Connect-PowerBiService -ClientId <Guid> -TenantId <Guid> [-InteractiveAuthentication] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,18 +42,63 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -ClientId
+{{ Fill ClientID Description }}
+
+```yaml
+Type: Guid
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -InteractiveAuthentication
+{{ Fill InteractiveAuthentication Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: Properties_InteractiveAuthentication
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Password
 {{ Fill Password Description }}
 
 ```yaml
 Type: SecureString
-Parameter Sets: (All)
+Parameter Sets: Properties_Credential
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -TenantId
+{{ Fill TenantId Description }}
+
+```yaml
+Type: Guid
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -50,10 +107,10 @@ Accept wildcard characters: False
 
 ```yaml
 Type: String
-Parameter Sets: (All)
+Parameter Sets: Properties_Credential
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: True (ByPropertyName)
@@ -66,8 +123,6 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### System.String
-
-### Microsoft.Identity.Client.AzureCloudInstance
 
 ### System.Security.SecureString
 

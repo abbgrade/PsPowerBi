@@ -1,51 +1,76 @@
 requires Configuration
+requires ModuleName
 
-[System.Version] $global:PsPowerBiVersion = New-Object System.Version (
-	Import-PowerShellDataFile $PSScriptRoot\..\src\PsPowerBi\PsPowerBi.psd1
-).ModuleVersion
-[System.IO.DirectoryInfo] $global:PsPowerBiStage = "$PSScriptRoot\..\src\PsPowerBi\bin\$Configuration\netcoreapp3.1\publish"
-[System.IO.FileInfo] $global:PsPowerBiManifest = "$global:PsPowerBiStage\PsPowerBi.psd1"
-[System.IO.DirectoryInfo] $global:PsPowerBiDoc = "$PSScriptRoot\..\docs"
-[System.IO.DirectoryInfo] $global:PsPowerBiInstallDirectory = Join-Path $env:PSModulePath.Split(';')[0] 'PsPowerBi' $global:PsPowerBiVersion
+[System.IO.DirectoryInfo] $PublishDirectory = "$PSScriptRoot/../publish"
+[System.IO.DirectoryInfo] $SourceDirectory = "$PSScriptRoot/../src"
+[System.IO.DirectoryInfo] $DocumentationDirectory = "$PSScriptRoot/../docs"
+[System.IO.DirectoryInfo] $ModulePublishDirectory = "$PublishDirectory/$ModuleName"
+[System.IO.DirectoryInfo] $ModuleSourceDirectory = "$SourceDirectory/$ModuleName"
+[System.IO.DirectoryInfo] $BinaryDirectory = "$ModuleSourceDirectory/bin"
+[System.IO.DirectoryInfo] $ObjectDirectory = "$ModuleSourceDirectory/obj"
 
-task PsPowerBi.Build.Dll -Jobs {
-    exec { dotnet publish $PSScriptRoot\..\src\PsPowerBi -c $Configuration }
+# Synopsis: Set the prerelease in the manifest based on the build number.
+task SetPrerelease -If $BuildNumber {
+	$Global:PreRelease = "alpha$( '{0:d4}' -f $BuildNumber )"
+	Update-ModuleManifest -Path $Global:Manifest -Prerelease $Global:PreRelease
 }
 
-task PsPowerBi.Import -Jobs PsPowerBi.Build.Dll, {
-    Import-Module $global:PsPowerBiManifest.FullName
+# Synopsis: Build the dll with the module commands.
+task Build.Dll -Jobs {
+	exec { dotnet publish $ModuleSourceDirectory -c $Configuration -o $ModulePublishDirectory }
+	$Global:Manifest = Get-Item $ModulePublishDirectory/$ModuleName.psd1
+}, SetPrerelease
+
+# Synopsis: Import the module.
+task Import -Jobs Build.Dll, {
+    Import-Module $Global:Manifest
 }
 
-task PsPowerBi.Doc.Init -If { -Not $global:PsPowerBiDoc.Exists -Or $Force } -Jobs PsPowerBi.Import, {
-    New-MarkdownHelp -Module PsPowerBi -OutputFolder $global:PsPowerBiDoc -Force:$Force -ErrorAction Stop
+# Synopsis: Import platyPs.
+task Import.platyPs -Jobs {
+	Import-Module platyPs
 }
 
-task PsPowerBi.Doc -Jobs PsPowerBi.Import, {
-    Update-MarkdownHelp -Path $global:PsPowerBiDoc
+# Synopsis: Initialize the documentation.
+task Doc.Init -If { $DocumentationDirectory.Exists -eq $false -Or $ForceDocInit -eq $true } -Jobs Import, Import.platyPs, {
+	New-Item $DocumentationDirectory -ItemType Directory -ErrorAction SilentlyContinue
+    New-MarkdownHelp -Module $ModuleName -OutputFolder $DocumentationDirectory -Force:$ForceDocInit -ErrorAction Stop
 }
 
-task PsPowerBi.Build.Help -Jobs PsPowerBi.Doc, {
-    New-ExternalHelp -Path $global:PsPowerBiDoc -OutputPath $global:PsPowerBiStage\en-US\ -Force
+# Synopsis: Update the markdown documentation.
+task Doc.Update -Jobs Import, Import.platyPs, Doc.Init, {
+    Update-MarkdownHelp -Path $DocumentationDirectory
 }
 
-task PsPowerBi.Build -If { -Not $global:PsPowerBiManifest.Exists -Or $Force } -Jobs PsPowerBi.Build.Dll, PsPowerBi.Build.Help
-
-task PsPowerBi.Clean {
-	remove $PSScriptRoot\..\src\PsPowerBi\bin, $PSScriptRoot\..\src\PsPowerBi\obj
+# Synopsis: Build the XML help based on the markdown documentation.
+task Build.Help -Jobs Import.platyPs, Doc.Update, {
+    New-ExternalHelp -Path $DocumentationDirectory -OutputPath $ModulePublishDirectory\en-US\ -Force
 }
 
-task PsPowerBi.Uninstall -If { $global:PsPowerBiInstallDirectory.Exists } -Jobs {
-	Remove-Item -Recurse -Force $global:PsPowerBiInstallDirectory.FullName
+# Synopsis: Build the module.
+task Build -Job Build.Dll, Build.Help
+
+# Synopsis: Remove all temporary files.
+task Clean {
+	remove $BinaryDirectory, $ObjectDirectory, $PublishDirectory
 }
 
-task PsPowerBi.Install -If { -Not $global:PsPowerBiInstallDirectory.Exists -Or $Force } -Jobs PsPowerBi.Build, {
-	Get-ChildItem $global:PsPowerBiStage | Copy-Item -Destination $global:PsPowerBiInstallDirectory.FullName -Recurse -Force
+# Synopsis: Install the module.
+task Install -Jobs Build, {
+	$info = Import-PowerShellDataFile $Global:Manifest
+	$version = ([System.Version] $info.ModuleVersion)
+	$defaultModulePath = $env:PsModulePath -split ';' | Select-Object -First 1
+	Write-Verbose "install $ModuleName $version to $defaultModulePath"
+	$installPath = Join-Path $defaultModulePath $ModuleName $version.ToString()
+	New-Item -Type Directory $installPath -Force | Out-Null
+	Get-ChildItem $Global:Manifest.Directory | Copy-Item -Destination $installPath -Recurse -Force
 }
 
 # Synopsis: Publish the module to PSGallery.
-task PsPowerBi.Publish -Jobs PsPowerBi.Install, {
-
-	assert ( $Configuration -eq 'Release' )
-
-	Publish-Module -Name PsPowerBi -NuGetApiKey $NuGetApiKey
+task Publish -Jobs Clean, Build, {
+	if ( -Not $Global:PreRelease ) {
+		assert ( $Configuration -eq 'Release' )
+		Update-ModuleManifest -Path $Global:Manifest -Prerelease ''
+	}
+	Publish-Module -Path $Global:Manifest.Directory -NuGetApiKey $NuGetApiKey -Force:$ForcePublish
 }
